@@ -10,4 +10,4 @@ find_package(Boost REQUIRED COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 add_executable(php-session-cleaner php-session-cleaner.cpp)
 
-target_link_libraries(php-session-cleaner -static-libgcc -static-libstdc++ Boost::system Boost::filesystem)
+target_link_libraries(php-session-cleaner -static -static-libgcc -static-libstdc++ Boost::system Boost::filesystem)
