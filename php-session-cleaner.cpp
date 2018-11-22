@@ -21,15 +21,22 @@ int main(int argc, char *argv[])
             if (!is_directory(entry)) {
                 std::string path = entry.path().filename().string();
                 if (path.find("sess_") == 0) {
-                    // boost::system::error_code ecSize;
-                    // boost::uintmax_t filesize = file_size(entry, ecSize);
                     boost::system::error_code ecTime;
                     std::time_t tm = last_write_time(entry, ecTime);
                     double days = difftime(timeNow, tm) / seconds_in_a_day;
                     if (days > minDays) {
-                         remove(path);
-                         std::cout << path << " removed, modified " << days << " days ago\n";
-                         removed ++;
+                         remove(entry); removed ++;
+                         std::cout << (removed + 1) << ". " << path 
+                                   << " removed, modified " << days << " days ago\n";
+                    } else if (days >= 1) {
+                         boost::system::error_code ecSize;
+                         boost::uintmax_t filesize = file_size(entry, ecSize);
+                         if (filesize <= 50) {
+                            // if the session file is technicatlly empty, we will remove it next day
+                            remove(entry); removed ++;
+                            std::cout << (removed + 1) << ". " << path << " removed, " 
+                                      << filesize << " bytes, modified " << days << " days ago\n";
+                         }
                     }			 
                 }
             }
